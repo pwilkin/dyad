@@ -18,10 +18,10 @@ jobs:
       matrix:
         os: [
             # disabling until we fix the commands below (skip macos cert)
-            # { name: "linux", image: "ubuntu-latest" },
-            { name: "macos-intel", image: "macos-13" },
-            { name: "macos", image: "macos-latest" },
-            { name: "windows", image: "windows-latest" },
+            { name: "linux", image: "ubuntu-latest" },
+            #{ name: "macos-intel", image: "macos-13" },
+            #{ name: "macos", image: "macos-latest" },
+            #{ name: "windows", image: "windows-latest" },
           ]
     runs-on: ${{ matrix.os.image }}
     steps:
