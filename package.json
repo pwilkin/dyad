@@ -6,14 +6,14 @@
   "main": ".vite/build/main.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/dyad-sh/dyad.git"
+    "url": "https://github.com/pwilkin/dyad.git"
   },
   "engines": {
     "node": ">=20"
   },
   "scripts": {
     "clean": "rm -rf out && rm -rf scaffold/node_modules",
-    "start": "electron-forge start",
+    "start": "electron-forge start -- --no-sandbox",
     "package": "npm run clean && electron-forge package",
     "make": "npm run clean && electron-forge make",
     "publish": "npm run clean && electron-forge publish",
@@ -53,13 +53,13 @@
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "@typescript-eslint/parser": "^5.62.0",
     "@vitest/ui": "^3.1.1",
-    "drizzle-kit": "^0.30.6",
+    "drizzle-kit": "^0.31.0",
     "electron": "35.1.4",
     "eslint": "^8.57.1",
     "eslint-plugin-import": "^2.31.0",
     "happy-dom": "^17.4.4",
     "typescript": "^5.8.3",
-    "vite": "^5.4.17",
+    "vite": "^6.3.3",
     "vitest": "^3.1.1"
   },
   "dependencies": {
@@ -69,6 +69,7 @@
     "@biomejs/biome": "^1.9.4",
     "@dyad-sh/supabase-management-js": "v1.0.0",
     "@monaco-editor/react": "^4.7.0-rc.0",
+    "@octokit/request": "^9.2.3",
     "@openrouter/ai-sdk-provider": "^0.4.5",
     "@radix-ui/react-accordion": "^1.2.4",
     "@radix-ui/react-dialog": "^1.1.7",
