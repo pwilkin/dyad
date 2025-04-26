@@ -48,7 +48,7 @@ export function useLoadVersions(appId: number | null) {
       console.error("Error refreshing versions:", error);
       setError(error instanceof Error ? error : new Error(String(error)));
     }
-  }, [appId, setVersions, setError]);
+  }, [appId, setVersions]);
 
   return { versions, loading, error, refreshVersions };
 }

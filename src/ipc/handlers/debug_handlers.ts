@@ -1,11 +1,10 @@
-import { ipcMain, app } from "electron";
-import { platform, arch } from "os";
-import { SystemDebugInfo } from "../ipc_types";
+import { ipcMain, } from "electron";
+import { platform, arch } from "node:os";
+import type { SystemDebugInfo } from "../ipc_types";
 import { readSettings } from "../../main/settings";
-import { execSync } from "child_process";
 import log from "electron-log";
-import path from "path";
-import fs from "fs";
+import path from "node:path";
+import fs from "node:fs";
 import { runShellCommand } from "../utils/runShellCommand";
 
 export function registerDebugHandlers() {

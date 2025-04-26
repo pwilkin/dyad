@@ -1,4 +1,4 @@
-import React from "react";
+
 
 interface ConfirmationDialogProps {
   isOpen: boolean;
@@ -28,7 +28,7 @@ export default function ConfirmationDialog({
       <div className="flex min-h-screen items-center justify-center p-4 text-center sm:p-0">
         <div
           className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
-          onClick={onCancel}
+          onClick={onCancel} onKeyDown={onCancel}
         />
 
         <div className="relative transform overflow-hidden rounded-lg bg-white dark:bg-gray-800 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">

@@ -8,7 +8,6 @@ import {
   selectedAppIdAtom,
 } from "@/atoms/appAtoms";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
-import { App } from "@/ipc/ipc_types";
 
 export function useRunApp() {
   const [loading, setLoading] = useState(false);
@@ -49,7 +48,7 @@ export function useRunApp() {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [setAppUrlObj, setApp, setAppOutput, appUrlObj?.appId]);
 
   const stopApp = useCallback(async (appId: number) => {
     if (appId === null) {
@@ -118,13 +117,13 @@ export function useRunApp() {
         setLoading(false);
       }
     },
-    [appId, setApp, setAppOutput, setAppUrlObj, setError, setPreviewPanelKey]
+    [appId, setApp, setAppOutput, setAppUrlObj, setPreviewPanelKey]
   );
 
   const refreshAppIframe = useCallback(async () => {
     setPreviewPanelKey((prevKey) => prevKey + 1);
     setError(null);
-  }, [setPreviewPanelKey, setError]);
+  }, [setPreviewPanelKey]);
 
   return { loading, error, runApp, stopApp, restartApp, app, refreshAppIframe };
 }

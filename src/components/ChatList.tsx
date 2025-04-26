@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { useNavigate, useRouterState } from "@tanstack/react-router";
-import type { ChatSummary } from "@/lib/schemas";
 import { formatDistanceToNow } from "date-fns";
 import { PlusCircle } from "lucide-react";
 import { useAtom } from "jotai";

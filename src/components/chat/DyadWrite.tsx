@@ -9,7 +9,7 @@ import {
   CircleX,
 } from "lucide-react";
 import { CodeHighlight } from "./CodeHighlight";
-import { CustomTagState } from "./stateTypes";
+import type { CustomTagState } from "./stateTypes";
 
 interface DyadWriteProps {
   children?: ReactNode;
@@ -46,6 +46,7 @@ export const DyadWrite: React.FC<DyadWriteProps> = ({
           : "border-border"
       }`}
       onClick={() => setIsContentVisible(!isContentVisible)}
+      onKeyDown={() => setIsContentVisible(!isContentVisible)}
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">

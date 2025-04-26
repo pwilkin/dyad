@@ -5,7 +5,6 @@ import fs from "node:fs";
 import { getDyadAppPath } from "../../paths/paths";
 import path from "node:path";
 import git from "isomorphic-git";
-import { getGithubUser } from "../handlers/github_handlers";
 import { getGitAuthor } from "../utils/git_author";
 import log from "electron-log";
 import { executeAddDependency } from "./executeAddDependency";
@@ -15,7 +14,7 @@ import {
   executeSupabaseSql,
 } from "../../supabase_admin/supabase_management_client";
 import { isServerFunction } from "../../supabase_admin/supabase_utils";
-import { SqlQuery } from "../../lib/schemas";
+import type { SqlQuery } from "../../lib/schemas";
 
 const readFile = fs.promises.readFile;
 const logger = log.scope("response_processor");
@@ -28,18 +27,18 @@ export function getDyadWriteTags(fullResponse: string): {
   const dyadWriteRegex = /<dyad-write([^>]*)>([\s\S]*?)<\/dyad-write>/gi;
   const pathRegex = /path="([^"]+)"/;
   const descriptionRegex = /description="([^"]+)"/;
-
-  let match;
+  
   const tags: { path: string; content: string; description?: string }[] = [];
+  let match: RegExpExecArray | null = dyadWriteRegex.exec(fullResponse);
 
-  while ((match = dyadWriteRegex.exec(fullResponse)) !== null) {
+  while (match !== null) {
     const attributesString = match[1];
     let content = match[2].trim();
 
     const pathMatch = pathRegex.exec(attributesString);
     const descriptionMatch = descriptionRegex.exec(attributesString);
 
-    if (pathMatch && pathMatch[1]) {
+    if (pathMatch?.[1]) {
       const path = pathMatch[1];
       const description = descriptionMatch?.[1];
 
@@ -59,6 +58,7 @@ export function getDyadWriteTags(fullResponse: string): {
         match[0]
       );
     }
+    match = dyadWriteRegex.exec(fullResponse);
   }
   return tags;
 }
@@ -69,10 +69,11 @@ export function getDyadRenameTags(fullResponse: string): {
 }[] {
   const dyadRenameRegex =
     /<dyad-rename from="([^"]+)" to="([^"]+)"[^>]*>([\s\S]*?)<\/dyad-rename>/g;
-  let match;
   const tags: { from: string; to: string }[] = [];
-  while ((match = dyadRenameRegex.exec(fullResponse)) !== null) {
+  let match : RegExpExecArray | null = dyadRenameRegex.exec(fullResponse);
+  while (match !== null) {
     tags.push({ from: match[1], to: match[2] });
+    match = dyadRenameRegex.exec(fullResponse);
   }
   return tags;
 }
@@ -80,10 +81,11 @@ export function getDyadRenameTags(fullResponse: string): {
 export function getDyadDeleteTags(fullResponse: string): string[] {
   const dyadDeleteRegex =
     /<dyad-delete path="([^"]+)"[^>]*>([\s\S]*?)<\/dyad-delete>/g;
-  let match;
   const paths: string[] = [];
-  while ((match = dyadDeleteRegex.exec(fullResponse)) !== null) {
+  let match: RegExpExecArray | null = dyadDeleteRegex.exec(fullResponse);
+  while (match !== null) {
     paths.push(match[1]);
+    match = dyadDeleteRegex.exec(fullResponse);
   }
   return paths;
 }
@@ -91,10 +93,11 @@ export function getDyadDeleteTags(fullResponse: string): string[] {
 export function getDyadAddDependencyTags(fullResponse: string): string[] {
   const dyadAddDependencyRegex =
     /<dyad-add-dependency packages="([^"]+)">[^<]*<\/dyad-add-dependency>/g;
-  let match;
   const packages: string[] = [];
-  while ((match = dyadAddDependencyRegex.exec(fullResponse)) !== null) {
+  let match: RegExpExecArray | null = dyadAddDependencyRegex.exec(fullResponse)
+  while (match !== null) {
     packages.push(...match[1].split(" "));
+    match = dyadAddDependencyRegex.exec(fullResponse);
   }
   return packages;
 }
@@ -103,7 +106,7 @@ export function getDyadChatSummaryTag(fullResponse: string): string | null {
   const dyadChatSummaryRegex =
     /<dyad-chat-summary>([\s\S]*?)<\/dyad-chat-summary>/g;
   const match = dyadChatSummaryRegex.exec(fullResponse);
-  if (match && match[1]) {
+  if (match?.[1]) {
     return match[1].trim();
   }
   return null;
@@ -113,10 +116,10 @@ export function getDyadExecuteSqlTags(fullResponse: string): SqlQuery[] {
   const dyadExecuteSqlRegex =
     /<dyad-execute-sql([^>]*)>([\s\S]*?)<\/dyad-execute-sql>/g;
   const descriptionRegex = /description="([^"]+)"/;
-  let match;
+  let match: RegExpExecArray | null = dyadExecuteSqlRegex.exec(fullResponse);
   const queries: { content: string; description?: string }[] = [];
 
-  while ((match = dyadExecuteSqlRegex.exec(fullResponse)) !== null) {
+  while (match !== null) {
     const attributesString = match[1] || "";
     let content = match[2].trim();
     const descriptionMatch = descriptionRegex.exec(attributesString);
@@ -133,6 +136,7 @@ export function getDyadExecuteSqlTags(fullResponse: string): SqlQuery[] {
     content = contentLines.join("\n");
 
     queries.push({ content, description });
+    match = dyadExecuteSqlRegex.exec(fullResponse);
   }
 
   return queries;
@@ -463,7 +467,7 @@ export async function processFullResponseActions(
       await db
         .update(messages)
         .set({
-          content: fullResponse + "\n\n" + appendedContent,
+          content: `${fullResponse}\n\n${appendedContent}`,
         })
         .where(eq(messages.id, messageId));
     }

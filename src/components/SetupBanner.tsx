@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { NodeSystemInfo } from "@/ipc/ipc_types";
+import type { NodeSystemInfo } from "@/ipc/ipc_types";
 import { usePostHog } from "posthog-js/react";
 type NodeInstallStep =
   | "install"
@@ -50,7 +50,7 @@ export function SetupBanner() {
       setNodeSystemInfo(null);
       setNodeCheckError(true);
     }
-  }, [setNodeSystemInfo, setNodeCheckError]);
+  }, []);
 
   useEffect(() => {
     checkNode();
@@ -75,7 +75,7 @@ export function SetupBanner() {
     posthog.capture("setup-flow:start-node-install-click");
     setNodeInstallStep("waiting-for-continue");
     IpcClient.getInstance().openExternalUrl(nodeSystemInfo!.nodeDownloadUrl);
-  }, [nodeSystemInfo, setNodeInstallStep]);
+  }, [nodeSystemInfo, posthog.capture]);
 
   const finishNodeInstall = useCallback(async () => {
     posthog.capture("setup-flow:continue-node-install-click");
@@ -83,7 +83,7 @@ export function SetupBanner() {
     await IpcClient.getInstance().reloadEnvPath();
     await checkNode();
     setNodeInstallStep("finished-checking");
-  }, [checkNode, setNodeInstallStep]);
+  }, [checkNode, posthog.capture]);
 
   // We only check for node version because pnpm is not required for the app to run.
   const isNodeSetupComplete = Boolean(nodeSystemInfo?.nodeVersion);
@@ -109,7 +109,7 @@ export function SetupBanner() {
     "border-zinc-200 dark:border-zinc-700"
   );
 
-  const getStatusIcon = (isComplete: boolean, hasError: boolean = false) => {
+  const getStatusIcon = (isComplete: boolean, hasError = false) => {
     if (hasError) {
       return <XCircle className="w-5 h-5 text-red-500" />;
     }
@@ -174,7 +174,7 @@ export function SetupBanner() {
                     <p className="mt-1">
                       After you have installed Node.js, click "Continue". If the
                       installer didn't work, try{" "}
-                      <a
+                      <button type="button"
                         className="text-blue-500 dark:text-blue-400 hover:underline"
                         onClick={() => {
                           IpcClient.getInstance().openExternalUrl(
@@ -183,7 +183,7 @@ export function SetupBanner() {
                         }}
                       >
                         more download options
-                      </a>
+                      </button>
                       .
                     </p>
                   )}
@@ -224,10 +224,10 @@ export function SetupBanner() {
               <p className="text-sm mb-3">
                 Connect your preferred AI provider to start generating code.
               </p>
-              <div
+              <button type="button"
                 className="p-3 bg-blue-50 dark:bg-blue-900/50 border border-blue-200 dark:border-blue-700 rounded-lg cursor-pointer hover:bg-blue-100 dark:hover:bg-blue-900/70 transition-colors"
                 onClick={handleAiSetupClick}
-                role="button"
+                onKeyDown={handleAiSetupClick}
                 tabIndex={isNodeSetupComplete ? 0 : -1}
               >
                 <div className="flex items-center justify-between gap-3">
@@ -247,12 +247,12 @@ export function SetupBanner() {
                   </div>
                   <ChevronRight className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                 </div>
-              </div>
+              </button>
 
-              <div
+              <button type="button"
                 className="mt-2 p-3 bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800/70 transition-colors"
                 onClick={handleOtherProvidersClick}
-                role="button"
+                onKeyDown={handleOtherProvidersClick}
                 tabIndex={isNodeSetupComplete ? 0 : -1}
               >
                 <div className="flex items-center justify-between gap-3">
@@ -271,7 +271,7 @@ export function SetupBanner() {
                   </div>
                   <ChevronRight className="w-4 h-4 text-gray-600 dark:text-gray-400" />
                 </div>
-              </div>
+              </button>
             </AccordionContent>
           </AccordionItem>
         </Accordion>
@@ -285,7 +285,7 @@ function NodeJsHelpCallout() {
     <div className="mt-3 p-3 bg-(--background-lighter) border rounded-lg text-sm">
       <p>
         If you run into issues, read our{" "}
-        <a
+        <button type="button"
           onClick={() => {
             IpcClient.getInstance().openExternalUrl(
               "https://www.dyad.sh/docs/help/nodejs"
@@ -294,7 +294,7 @@ function NodeJsHelpCallout() {
           className="text-blue-600 dark:text-blue-400 hover:underline font-medium"
         >
           Node.js troubleshooting guide
-        </a>
+        </button>
         .{" "}
       </p>
       <p className="mt-2">
@@ -344,7 +344,8 @@ function NodeInstallButton({
           Node.js not detected. Closing and re-opening Dyad usually fixes this.
         </div>
       );
-    default:
+    default: {
       const _exhaustiveCheck: never = nodeInstallStep;
+    }
   }
 }

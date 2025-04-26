@@ -9,7 +9,7 @@ import {
   CircleX,
 } from "lucide-react";
 import { CodeHighlight } from "./CodeHighlight";
-import { CustomTagState } from "./stateTypes";
+import type { CustomTagState } from "./stateTypes";
 
 interface DyadExecuteSqlProps {
   children?: ReactNode;
@@ -38,6 +38,7 @@ export const DyadExecuteSql: React.FC<DyadExecuteSqlProps> = ({
           : "border-border"
       }`}
       onClick={() => setIsContentVisible(!isContentVisible)}
+      onKeyDown={() => setIsContentVisible(!isContentVisible)}
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">

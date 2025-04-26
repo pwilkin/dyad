@@ -1,4 +1,4 @@
-import { ChildProcess } from "node:child_process";
+import type { ChildProcess } from "node:child_process";
 import treeKill from "tree-kill";
 
 // Define a type for the value stored in runningApps
@@ -76,7 +76,7 @@ export function killProcess(process: ChildProcess): Promise<void> {
         }
       });
     } else {
-      console.warn(`Cannot tree-kill process: PID is undefined.`);
+      console.warn("Cannot tree-kill process: PID is undefined.");
     }
   });
 }

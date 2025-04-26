@@ -1,6 +1,6 @@
 import { ipcMain } from "electron";
 import log from "electron-log";
-import { LocalModelListResponse, LocalModel } from "../ipc_types";
+import type { LocalModelListResponse, LocalModel } from "../ipc_types";
 
 const logger = log.scope("ollama_handler");
 

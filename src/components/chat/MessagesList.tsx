@@ -6,7 +6,7 @@ import { SetupBanner } from "../SetupBanner";
 import { useSettings } from "@/hooks/useSettings";
 import { useStreamChat } from "@/hooks/useStreamChat";
 import { selectedChatIdAtom } from "@/atoms/chatAtoms";
-import { useAtom, useAtomValue } from "jotai";
+import { useAtomValue } from "jotai";
 import { RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 

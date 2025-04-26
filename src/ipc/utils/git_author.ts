@@ -4,7 +4,7 @@ export async function getGitAuthor() {
   const user = await getGithubUser();
   const author = user
     ? {
-        name: `[dyad]`,
+        name: "[dyad]",
         email: user.email,
       }
     : {

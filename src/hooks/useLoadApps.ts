@@ -23,7 +23,7 @@ export function useLoadApps() {
     } finally {
       setLoading(false);
     }
-  }, [setApps, setError, setLoading]);
+  }, [setApps, setAppBasePath]);
 
   useEffect(() => {
     refreshApps();

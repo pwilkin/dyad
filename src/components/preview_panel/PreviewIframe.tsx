@@ -37,6 +37,8 @@ const ErrorBanner = ({ error, onDismiss, onAIFix }: ErrorBannerProps) => {
     <div className="absolute top-2 left-2 right-2 z-10 bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 rounded-md shadow-sm p-2">
       {/* Close button in top left */}
       <button
+        type="button"
+        title="Close"
         onClick={onDismiss}
         className="absolute top-1 left-1 p-1 hover:bg-red-100 dark:hover:bg-red-900 rounded"
       >
@@ -113,10 +115,9 @@ export const PreviewIframe = ({
         // Extract route imports and paths using regex for React Router syntax
         // Match <Route path="/path">
         const routePathsRegex = /<Route\s+(?:[^>]*\s+)?path=["']([^"']+)["']/g;
-        let match;
-
+        let match: RegExpExecArray | null = routePathsRegex.exec(routerContent);
         // Find all route paths in the router content
-        while ((match = routePathsRegex.exec(routerContent)) !== null) {
+        while (match !== null) {
           const path = match[1];
           // Create a readable label from the path
           const label =
@@ -132,6 +133,7 @@ export const PreviewIframe = ({
           if (!routes.some((r) => r.path === path)) {
             routes.push({ path, label });
           }
+          match = routePathsRegex.exec(routerContent);
         }
 
         setAvailableRoutes(routes);
@@ -210,7 +212,7 @@ export const PreviewIframe = ({
 
     window.addEventListener("message", handleMessage);
     return () => window.removeEventListener("message", handleMessage);
-  }, [navigationHistory, currentHistoryPosition, selectedAppId]);
+  }, [navigationHistory, currentHistoryPosition, selectedAppId, setAppOutput]);
 
   // Initialize navigation history when iframe loads
   useEffect(() => {
@@ -314,6 +316,7 @@ export const PreviewIframe = ({
         {/* Navigation Buttons */}
         <div className="flex space-x-1">
           <button
+            title="Go back"
             className="p-1 rounded hover:bg-gray-200 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed dark:text-gray-300"
             disabled={!canGoBack || loading || !selectedAppId}
             onClick={handleNavigateBack}
@@ -321,6 +324,7 @@ export const PreviewIframe = ({
             <ArrowLeft size={16} />
           </button>
           <button
+            title="Go forward"
             className="p-1 rounded hover:bg-gray-200 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed dark:text-gray-300"
             disabled={!canGoForward || loading || !selectedAppId}
             onClick={handleNavigateForward}
@@ -328,6 +332,7 @@ export const PreviewIframe = ({
             <ArrowRight size={16} />
           </button>
           <button
+            title="Reload"
             onClick={handleReload}
             className="p-1 rounded hover:bg-gray-200 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed dark:text-gray-300"
             disabled={loading || !selectedAppId}
@@ -374,6 +379,7 @@ export const PreviewIframe = ({
         {/* Action Buttons */}
         <div className="flex space-x-1">
           <button
+            title="Open in external browser"
             onClick={() => {
               if (appUrl) {
                 IpcClient.getInstance().openExternalUrl(appUrl);

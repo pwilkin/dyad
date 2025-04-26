@@ -47,9 +47,8 @@ export function useSupabase() {
         if (result.success) {
           setError(null);
           return result;
-        } else {
-          throw new Error("Failed to set project for app");
         }
+          throw new Error("Failed to set project for app");
       } catch (error) {
         console.error("Error setting Supabase project for app:", error);
         setError(error instanceof Error ? error : new Error(String(error)));
@@ -73,9 +72,8 @@ export function useSupabase() {
         if (result.success) {
           setError(null);
           return result;
-        } else {
-          throw new Error("Failed to unset project for app");
         }
+          throw new Error("Failed to unset project for app");
       } catch (error) {
         console.error("Error unsetting Supabase project for app:", error);
         setError(error instanceof Error ? error : new Error(String(error)));

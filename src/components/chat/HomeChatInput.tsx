@@ -1,6 +1,6 @@
-import { SendIcon, StopCircleIcon, X } from "lucide-react";
+import { SendIcon, StopCircleIcon, } from "lucide-react";
 import type React from "react";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, } from "react";
 import { ModelPicker } from "@/components/ModelPicker";
 import { useSettings } from "@/hooks/useSettings";
 import { homeChatInputValueAtom } from "@/atoms/chatAtoms"; // Use a different atom for home input
@@ -14,18 +14,18 @@ export function HomeChatInput({ onSubmit }: { onSubmit: () => void }) {
   const { streamMessage, isStreaming, setIsStreaming } = useStreamChat({
     hasChatId: false,
   }); // eslint-disable-line @typescript-eslint/no-unused-vars
-  const adjustHeight = () => {
+  const adjustHeight = useCallback(() => {
     const textarea = textareaRef.current;
     if (textarea) {
       textarea.style.height = "0px";
       const scrollHeight = textarea.scrollHeight;
       textarea.style.height = `${scrollHeight + 4}px`;
     }
-  };
+  }, []);
 
   useEffect(() => {
     adjustHeight();
-  }, [inputValue]);
+  }, [adjustHeight]);
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -47,10 +47,9 @@ export function HomeChatInput({ onSubmit }: { onSubmit: () => void }) {
               ref={textareaRef}
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
-              onKeyPress={handleKeyPress}
+              onKeyDownCapture={handleKeyPress}
               placeholder="Ask Dyad to build..."
-              className="flex-1 p-2 focus:outline-none overflow-y-auto min-h-[40px] max-h-[200px]"
-              style={{ resize: "none" }}
+              className="flex-1 p-2 focus:outline-none overflow-y-auto min-h-[40px] max-h-[200px] resize-none"
               disabled={isStreaming} // Should ideally reflect if *any* stream is happening
             />
             {isStreaming ? (

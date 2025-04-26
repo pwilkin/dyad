@@ -5,7 +5,6 @@ import { desc, eq } from "drizzle-orm";
 import type {
   App,
   CreateAppParams,
-  SandboxConfig,
   Version,
 } from "../ipc_types";
 import fs from "node:fs";
@@ -26,16 +25,13 @@ import {
   processCounter,
   killProcess,
   removeAppIfCurrentProcess,
-  RunningAppInfo,
 } from "../utils/process_manager";
 import { ALLOWED_ENV_VARS } from "../../constants/models";
 import { getEnvVar } from "../utils/read_env";
-import { readSettings } from "../../main/settings";
-import { Worker } from "worker_threads";
 import fixPath from "fix-path";
 import { getGitAuthor } from "../utils/git_author";
 import killPort from "kill-port";
-import util from "util";
+import util from "node:util";
 import log from "electron-log";
 import { getSupabaseProjectName } from "../../supabase_admin/supabase_management_client";
 
@@ -80,7 +76,9 @@ async function executeAppLocalNode({
   if (!process.pid) {
     // Attempt to capture any immediate errors if possible
     let errorOutput = "";
-    process.stderr?.on("data", (data) => (errorOutput += data));
+    process.stderr?.on("data", (data) => { 
+      errorOutput += data
+    });
     await new Promise((resolve) => process.on("error", resolve)); // Wait for error event
     throw new Error(
       `Failed to spawn process for app ${appId}. Error: ${
@@ -847,7 +845,7 @@ export function registerAppHandlers() {
               await fsPromises.rename(newAppPath, oldAppPath);
             } catch (rollbackError) {
               logger.error(
-                `Failed to rollback file move during rename error:`,
+                "Failed to rollback file move during rename error:",
                 rollbackError
               );
             }

@@ -1,21 +1,19 @@
 import {
   ipcMain,
-  IpcMainEvent,
   BrowserWindow,
-  IpcMainInvokeEvent,
+  type IpcMainInvokeEvent,
 } from "electron";
 import fetch from "node-fetch"; // Use node-fetch for making HTTP requests in main process
 import { writeSettings, readSettings } from "../../main/settings";
 import { updateAppGithubRepo } from "../../db/index";
 import git from "isomorphic-git";
 import http from "isomorphic-git/http/node";
-import path from "node:path";
 import fs from "node:fs";
 import { getDyadAppPath } from "../../paths/paths";
 import { db } from "../../db";
 import { apps } from "../../db/schema";
 import { eq } from "drizzle-orm";
-import { GithubUser } from "../../lib/schemas";
+import type { GithubUser } from "../../lib/schemas";
 import log from "electron-log";
 
 const logger = log.scope("github_handlers");
@@ -121,7 +119,7 @@ async function pollForAccessToken(event: IpcMainInvokeEvent) {
 
       stopPolling();
       return;
-    } else if (data.error) {
+    }if (data.error) {
       switch (data.error) {
         case "authorization_pending":
           logger.debug("Authorization pending...");
@@ -134,7 +132,7 @@ async function pollForAccessToken(event: IpcMainInvokeEvent) {
             interval * 1000
           );
           break;
-        case "slow_down":
+        case "slow_down": {
           const newInterval = interval + 5;
           logger.debug(`Slow down requested. New interval: ${newInterval}s`);
           currentFlowState.interval = newInterval; // Update interval
@@ -146,6 +144,7 @@ async function pollForAccessToken(event: IpcMainInvokeEvent) {
             newInterval * 1000
           );
           break;
+        }
         case "expired_token":
           logger.error("Device code expired.");
           event.sender.send("github:flow-error", {
@@ -207,7 +206,7 @@ function handleStartGithubFlow(
   logger.debug(`Received github:start-flow for appId: ${args.appId}`);
 
   // If a flow is already in progress, maybe cancel it or send an error
-  if (currentFlowState && currentFlowState.isPolling) {
+  if (currentFlowState?.isPolling) {
     logger.warn("Another GitHub flow is already in progress.");
     event.sender.send("github:flow-error", {
       error: "Another connection process is already active.",
@@ -313,12 +312,11 @@ async function handleIsRepoAvailable(
     });
     if (res.status === 404) {
       return { available: true };
-    } else if (res.ok) {
+    }if (res.ok) {
       return { available: false, error: "Repository already exists." };
-    } else {
+    }
       const data = await res.json();
       return { available: false, error: data.message || "Unknown error" };
-    }
   } catch (err: any) {
     return { available: false, error: err.message || "Unknown error" };
   }
@@ -348,7 +346,7 @@ async function handleCreateRepo(
     // Create repo
     const createUrl = org
       ? `https://api.github.com/orgs/${owner}/repos`
-      : `https://api.github.com/user/repos`;
+      : "https://api.github.com/user/repos";
     const res = await fetch(createUrl, {
       method: "POST",
       headers: {

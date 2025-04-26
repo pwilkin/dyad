@@ -10,7 +10,7 @@ import { DyadAddIntegration } from "./DyadAddIntegration";
 import { CodeHighlight } from "./CodeHighlight";
 import { useAtomValue } from "jotai";
 import { isStreamingAtom } from "@/atoms/chatAtoms";
-import { CustomTagState } from "./stateTypes";
+import type { CustomTagState } from "./stateTypes";
 import { DyadOutput } from "./DyadOutput";
 
 interface DyadMarkdownParserProps {
@@ -94,13 +94,14 @@ function preprocessUnclosedTags(content: string): {
 
     // Track the positions of opening tags
     const openingMatches: RegExpExecArray[] = [];
-    let match;
-
+    
     // Reset regex lastIndex to start from the beginning
     openTagPattern.lastIndex = 0;
+    let match: RegExpExecArray | null = openTagPattern.exec(processedContent);
 
-    while ((match = openTagPattern.exec(processedContent)) !== null) {
+    while (match !== null) {
       openingMatches.push({ ...match });
+      match = openTagPattern.exec(processedContent);
     }
 
     const openCount = openingMatches.length;
@@ -151,10 +152,10 @@ function parseCustomTags(content: string): ContentPiece[] {
 
   const contentPieces: ContentPiece[] = [];
   let lastIndex = 0;
-  let match;
+  let match: RegExpExecArray | null = tagPattern.exec(processedContent);
 
   // Find all custom tags
-  while ((match = tagPattern.exec(processedContent)) !== null) {
+  while (match !== null) {
     const [fullMatch, tag, attributesStr, tagContent] = match;
     const startIndex = match.index;
 
@@ -169,9 +170,10 @@ function parseCustomTags(content: string): ContentPiece[] {
     // Parse attributes
     const attributes: Record<string, string> = {};
     const attrPattern = /(\w+)="([^"]*)"/g;
-    let attrMatch;
-    while ((attrMatch = attrPattern.exec(attributesStr)) !== null) {
+    let attrMatch: RegExpExecArray | null = attrPattern.exec(attributesStr);
+    while (attrMatch !== null) {
       attributes[attrMatch[1]] = attrMatch[2];
+      attrMatch = attrPattern.exec(attributesStr);
     }
 
     // Check if this tag was marked as in progress
@@ -191,6 +193,7 @@ function parseCustomTags(content: string): ContentPiece[] {
     });
 
     lastIndex = startIndex + fullMatch.length;
+    match = tagPattern.exec(processedContent);
   }
 
   // Add the remaining markdown content

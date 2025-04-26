@@ -109,7 +109,7 @@ const TreeNode = ({ node, level }: TreeNodeProps) => {
     <li className="py-0.5">
       <div
         className="flex items-center hover:bg-(--sidebar) rounded cursor-pointer px-1.5 py-0.5 text-sm"
-        onClick={handleClick}
+        onClick={handleClick} onKeyDown={handleClick}
       >
         {node.isDirectory && (
           <span className="mr-1 text-gray-500">

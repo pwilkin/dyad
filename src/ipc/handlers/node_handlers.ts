@@ -1,7 +1,7 @@
-import { ipcMain, app } from "electron";
-import { exec, execSync } from "child_process";
-import { platform, arch } from "os";
-import { NodeSystemInfo } from "../ipc_types";
+import { ipcMain, } from "electron";
+import { execSync } from "node:child_process";
+import { platform, arch } from "node:os";
+import type { NodeSystemInfo } from "../ipc_types";
 import fixPath from "fix-path";
 import { runShellCommand } from "../utils/runShellCommand";
 import log from "electron-log";
@@ -28,7 +28,7 @@ export function registerNodeHandlers() {
     ]);
     // Default to mac download url.
     let nodeDownloadUrl = "https://nodejs.org/dist/v22.14.0/node-v22.14.0.pkg";
-    if (platform() == "win32") {
+    if (platform() === "win32") {
       if (arch() === "arm64" || arch() === "arm") {
         nodeDownloadUrl =
           "https://nodejs.org/dist/v22.14.0/node-v22.14.0-arm64.msi";

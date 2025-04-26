@@ -1,4 +1,4 @@
-import { memo } from "react";
+
 import type { Message } from "@/ipc/ipc_types";
 import { DyadMarkdownParser } from "./DyadMarkdownParser";
 import { motion } from "framer-motion";

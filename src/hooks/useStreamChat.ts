@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, } from "react";
 import type { Message } from "@/ipc/ipc_types";
 import { useAtom, useSetAtom } from "jotai";
 import {
@@ -14,7 +14,6 @@ import { useChats } from "./useChats";
 import { useLoadApp } from "./useLoadApp";
 import { selectedAppIdAtom } from "@/atoms/appAtoms";
 import { useLoadVersions } from "./useLoadVersions";
-import { showError } from "@/lib/toast";
 import { useProposal } from "./useProposal";
 import { useSearch } from "@tanstack/react-router";
 import { useRunApp } from "./useRunApp";
@@ -42,7 +41,7 @@ export function useStreamChat({
     const { id } = useSearch({ from: "/chat" });
     chatId = id;
   }
-  let { refreshProposal } = hasChatId ? useProposal(chatId) : useProposal();
+  const { refreshProposal } = hasChatId ? useProposal(chatId) : useProposal();
 
   const streamMessage = useCallback(
     async ({
@@ -129,7 +128,7 @@ export function useStreamChat({
         setError(error instanceof Error ? error.message : String(error));
       }
     },
-    [setMessages, setIsStreaming, setIsPreviewOpen]
+    [setMessages, setIsStreaming, setIsPreviewOpen, refreshProposal, refreshAppIframe, refreshVersions, refreshChats, refreshApp, setStreamCount, setError]
   );
 
   return {

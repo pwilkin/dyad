@@ -144,7 +144,7 @@ export function ProviderSettingsPage({ provider }: ProviderSettingsPageProps) {
     if (saveError) {
       setSaveError(null);
     }
-  }, [apiKeyInput]);
+  }, [saveError]);
 
   return (
     <div className="min-h-screen px-8 py-4">

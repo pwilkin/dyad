@@ -1,18 +1,12 @@
 import type React from "react";
 import type { ReactNode } from "react";
 import { useState } from "react";
-import { Button } from "../ui/button";
 import { IpcClient } from "../../ipc/ipc_client";
-import { useAtom, useAtomValue } from "jotai";
-import { chatMessagesAtom, selectedChatIdAtom } from "../../atoms/chatAtoms";
-import { useStreamChat } from "@/hooks/useStreamChat";
 import {
   Package,
   ChevronsUpDown,
   ChevronsDownUp,
   Loader,
-  ExternalLink,
-  Download,
 } from "lucide-react";
 import { CodeHighlight } from "./CodeHighlight";
 
@@ -40,6 +34,9 @@ export const DyadAddDependency: React.FC<DyadAddDependencyProps> = ({
       onClick={
         hasChildren ? () => setIsContentVisible(!isContentVisible) : undefined
       }
+      onKeyDown={
+        hasChildren ? () => setIsContentVisible(!isContentVisible) : undefined
+      }
     >
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-2">
@@ -55,6 +52,11 @@ export const DyadAddDependency: React.FC<DyadAddDependencyProps> = ({
                     className="cursor-pointer text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
                     key={p}
                     onClick={() => {
+                      IpcClient.getInstance().openExternalUrl(
+                        `https://www.npmjs.com/package/${p}`
+                      );
+                    }}
+                    onKeyDown={() => {
                       IpcClient.getInstance().openExternalUrl(
                         `https://www.npmjs.com/package/${p}`
                       );

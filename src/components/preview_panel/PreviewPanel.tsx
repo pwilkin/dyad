@@ -5,7 +5,6 @@ import {
   previewPanelKeyAtom,
   selectedAppIdAtom,
 } from "../../atoms/appAtoms";
-import { useLoadApp } from "@/hooks/useLoadApp";
 import { CodeView } from "./CodeView";
 import { PreviewIframe } from "./PreviewIframe";
 import {
@@ -14,11 +13,8 @@ import {
   ChevronDown,
   ChevronUp,
   Logs,
-  RefreshCw,
   MoreVertical,
-  Trash2,
   Cog,
-  CirclePower,
   Power,
 } from "lucide-react";
 import { motion } from "framer-motion";
@@ -127,7 +123,7 @@ const ConsoleHeader = ({
   latestMessage,
 }: ConsoleHeaderProps) => (
   <div
-    onClick={onToggle}
+    onClick={onToggle} onKeyDown={onToggle}
     className="flex items-start gap-2 px-4 py-1.5 border-t border-border cursor-pointer hover:bg-[var(--background-darkest)] transition-colors"
   >
     <Logs size={16} className="mt-0.5" />

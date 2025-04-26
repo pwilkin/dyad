@@ -1,5 +1,4 @@
 import { IpcClient } from "@/ipc/ipc_client";
-import React, { useState } from "react";
 import { Button } from "./ui/button";
 import { atom, useAtom } from "jotai";
 import { useSettings } from "@/hooks/useSettings";
@@ -30,7 +29,7 @@ export function PrivacyBanner() {
             <em className="block italic mt-0.5">
               Note: this does not log your code or messages.
             </em>
-            <a
+            <button type="button"
               onClick={() => {
                 IpcClient.getInstance().openExternalUrl(
                   "https://dyad.sh/docs/telemetry"
@@ -39,7 +38,7 @@ export function PrivacyBanner() {
               className="cursor-pointer text-sm text-blue-600 dark:text-blue-400 hover:underline"
             >
               Learn more
-            </a>
+            </button>
           </p>
         </div>
         <div className="flex gap-2 justify-end">

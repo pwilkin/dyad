@@ -1,5 +1,6 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
-import { IpcClient, DeepLinkData } from "../ipc/ipc_client";
+import type React from "react";
+import { createContext, useContext, useEffect, useState } from "react";
+import { IpcClient, type DeepLinkData } from "../ipc/ipc_client";
 
 type DeepLinkContextType = {
   lastDeepLink: (DeepLinkData & { timestamp: number }) | null;

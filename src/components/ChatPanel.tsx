@@ -37,11 +37,11 @@ export function ChatPanel({
   const userScrollTimeoutRef = useRef<number | null>(null);
   const lastScrollTopRef = useRef<number>(0);
 
-  const scrollToBottom = (behavior: ScrollBehavior = "smooth") => {
+  const scrollToBottom = useCallback((behavior: ScrollBehavior = "smooth") => {
     messagesEndRef.current?.scrollIntoView({ behavior });
-  };
+  }, []);
 
-  const handleScroll = () => {
+  const handleScroll = useCallback(() => {
     if (!messagesContainerRef.current) return;
 
     const container = messagesContainerRef.current;
@@ -60,12 +60,12 @@ export function ChatPanel({
     }
 
     lastScrollTopRef.current = currentScrollTop;
-  };
+  }, []);
 
   useEffect(() => {
     console.log("streamCount", streamCount);
     scrollToBottom();
-  }, [streamCount]);
+  }, [streamCount, scrollToBottom]);
 
   useEffect(() => {
     const container = messagesContainerRef.current;
@@ -81,7 +81,7 @@ export function ChatPanel({
         window.clearTimeout(userScrollTimeoutRef.current);
       }
     };
-  }, []);
+  }, [handleScroll]);
 
   useEffect(() => {
     const fetchAppName = async () => {
@@ -132,7 +132,7 @@ export function ChatPanel({
         });
       }
     }
-  }, [messages, isUserScrolling]);
+  }, [messages, isUserScrolling, scrollToBottom]);
 
   return (
     <div className="flex flex-col h-full">

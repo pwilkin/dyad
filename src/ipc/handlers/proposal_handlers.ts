@@ -1,13 +1,11 @@
 import { ipcMain, type IpcMainInvokeEvent } from "electron";
 import type {
   CodeProposal,
-  FileChange,
   ProposalResult,
-  SqlQuery,
 } from "../../lib/schemas";
 import { db } from "../../db";
 import { messages } from "../../db/schema";
-import { desc, eq, and, Update } from "drizzle-orm";
+import { desc, eq, and, } from "drizzle-orm";
 import path from "node:path"; // Import path for basename
 // Import tag parsers
 import {
@@ -100,7 +98,7 @@ const getProposalHandler = async (
         ...proposalDeleteFiles.map((tag) => ({
           name: path.basename(tag),
           path: tag,
-          summary: `Delete file`,
+          summary: "Delete file",
           type: "delete" as const,
           isServerFunction: isServerFunction(tag),
         })),
@@ -132,16 +130,14 @@ const getProposalHandler = async (
           proposal.packagesAdded.length
         );
         return { proposal, chatId, messageId }; // Return proposal and messageId
-      } else {
+      }
         logger.log(
           "No relevant tags found in the latest assistant message content."
         );
         return null; // No proposal could be generated
-      }
-    } else {
+    }
       logger.log(`No assistant message found for chatId: ${chatId}`);
       return null; // No message found
-    }
   } catch (error) {
     logger.error(`Error processing proposal for chatId ${chatId}:`, error);
     return null; // Indicate DB or processing error

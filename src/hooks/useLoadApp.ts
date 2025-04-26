@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { IpcClient } from "@/ipc/ipc_client";
-import type { App } from "@/ipc/ipc_types";
-import { atom, useAtom } from "jotai";
+import { useAtom } from "jotai";
 import { currentAppAtom } from "@/atoms/appAtoms";
 
 export function useLoadApp(appId: number | null) {
@@ -34,7 +33,7 @@ export function useLoadApp(appId: number | null) {
     };
 
     loadApp();
-  }, [appId]);
+  }, [appId, setApp]);
 
   const refreshApp = async () => {
     if (appId === null) {

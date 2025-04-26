@@ -18,9 +18,8 @@ import type {
   Version,
   SystemDebugInfo,
   LocalModel,
-  LocalModelListResponse,
 } from "./ipc_types";
-import type { CodeProposal, ProposalResult } from "@/lib/schemas";
+import type { ProposalResult } from "@/lib/schemas";
 import { showError } from "@/lib/toast";
 
 export interface ChatStreamCallbacks {

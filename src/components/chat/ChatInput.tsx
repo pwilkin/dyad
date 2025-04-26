@@ -24,19 +24,13 @@ import { IpcClient } from "@/ipc/ipc_client";
 import { chatInputValueAtom, chatMessagesAtom } from "@/atoms/chatAtoms";
 import { useAtom, useSetAtom } from "jotai";
 import { useStreamChat } from "@/hooks/useStreamChat";
-import { useChats } from "@/hooks/useChats";
 import { selectedAppIdAtom } from "@/atoms/appAtoms";
-import { useLoadApp } from "@/hooks/useLoadApp";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
 import { useProposal } from "@/hooks/useProposal";
-import {
-  CodeProposal,
+import type {
   ActionProposal,
   Proposal,
   SuggestedAction,
-  ProposalResult,
   FileChange,
   SqlQuery,
 } from "@/lib/schemas";
@@ -72,18 +66,18 @@ export function ChatInput({ chatId }: { chatId?: number }) {
   } = useProposal(chatId);
   const { proposal, chatId: proposalChatId, messageId } = proposalResult ?? {};
 
-  const adjustHeight = () => {
+  const adjustHeight = useCallback(() => {
     const textarea = textareaRef.current;
     if (textarea) {
       textarea.style.height = "0px";
       const scrollHeight = textarea.scrollHeight;
       textarea.style.height = `${scrollHeight + 4}px`;
     }
-  };
+  }, []);
 
   useEffect(() => {
     adjustHeight();
-  }, [inputValue]);
+  }, [adjustHeight]);
 
   useEffect(() => {
     if (error) {
@@ -204,6 +198,8 @@ export function ChatInput({ chatId }: { chatId?: number }) {
       {error && showError && (
         <div className="relative mt-2 bg-red-50 border border-red-200 rounded-md shadow-sm p-2">
           <button
+            type="button"
+            title="Dismiss"
             onClick={dismissError}
             className="absolute top-1 left-1 p-1 hover:bg-red-100 rounded"
           >
@@ -250,10 +246,9 @@ export function ChatInput({ chatId }: { chatId?: number }) {
               ref={textareaRef}
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
-              onKeyPress={handleKeyPress}
+              onKeyDownCapture={handleKeyPress}
               placeholder="Ask Dyad to build..."
-              className="flex-1 p-2 focus:outline-none overflow-y-auto min-h-[40px] max-h-[200px]"
-              style={{ resize: "none" }}
+              className="flex-1 p-2 focus:outline-none overflow-y-auto min-h-[40px] max-h-[200px] resize-none"
               disabled={isStreaming}
             />
             {isStreaming ? (
@@ -266,6 +261,8 @@ export function ChatInput({ chatId }: { chatId?: number }) {
               </button>
             ) : (
               <button
+                type="submit"
+                title="Submit"
                 onClick={handleSubmit}
                 disabled={!inputValue.trim() || !isAnyProviderSetup()}
                 className="px-2 py-2 mt-1 mr-2 hover:bg-(--background-darkest) text-(--sidebar-accent-fg) rounded-lg disabled:opacity-50"
@@ -336,7 +333,7 @@ function ChatInputActions({
     return <div>Tip proposal</div>;
   }
   if (proposal.type === "action-proposal") {
-    return <ActionProposalActions proposal={proposal}></ActionProposalActions>;
+    return <ActionProposalActions proposal={proposal} />;
   }
 
   // Split files into server functions and other files - only for CodeProposal
@@ -355,7 +352,7 @@ function ChatInputActions({
     if (isDetailsVisible) {
       return title;
     }
-    return title.slice(0, 60) + "...";
+    return `${title.slice(0, 60)}...`;
   }
 
   return (
@@ -479,6 +476,11 @@ function ChatInputActions({
                       key={index}
                       className="flex items-center space-x-2"
                       onClick={() => {
+                        IpcClient.getInstance().openExternalUrl(
+                          `https://www.npmjs.com/package/${pkg}`
+                        );
+                      }}
+                      onKeyDown={() => {
                         IpcClient.getInstance().openExternalUrl(
                           `https://www.npmjs.com/package/${pkg}`
                         );
@@ -634,6 +636,7 @@ function SqlQueryItem({ query }: { query: SqlQuery }) {
     <li
       className="bg-(--background-lightest) hover:bg-(--background-lighter) rounded-lg px-3 py-2 border border-border cursor-pointer"
       onClick={() => setIsExpanded(!isExpanded)}
+      onKeyDown={() => setIsExpanded(!isExpanded)}
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">

@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { getUserDataPath } from "../paths/paths";
-import { UserSettingsSchema, type UserSettings, Secret } from "../lib/schemas";
+import { UserSettingsSchema, type UserSettings, type Secret } from "../lib/schemas";
 import { safeStorage } from "electron";
 import { v4 as uuidv4 } from "uuid";
 

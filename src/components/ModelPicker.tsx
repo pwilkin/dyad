@@ -21,7 +21,7 @@ import { MODEL_OPTIONS } from "@/constants/models";
 import { useLocalModels } from "@/hooks/useLocalModels";
 import { useLocalLMSModels } from "@/hooks/useLMStudioModels";
 import { ChevronDown } from "lucide-react";
-import { LocalModel } from "@/ipc/ipc_types";
+import type { LocalModel } from "@/ipc/ipc_types";
 interface ModelPickerProps {
   selectedModel: LargeLanguageModel;
   onModelSelect: (model: LargeLanguageModel) => void;

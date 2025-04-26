@@ -5,7 +5,7 @@ import { readSettings } from "../../main/settings";
 
 export function registerSettingsHandlers() {
   ipcMain.handle("get-user-settings", async () => {
-    const settings = await readSettings();
+    const settings = readSettings();
 
     // Mask API keys before sending to renderer
     if (settings?.providerSettings) {
@@ -21,7 +21,7 @@ export function registerSettingsHandlers() {
           const providerSetting = settings.providerSettings[providerKey];
           // Check if apiKey exists and is a non-empty string before masking
           if (providerSetting?.apiKey?.value) {
-            providerSetting.apiKey = providerSetting.apiKey;
+            providerSetting.apiKey.value = providerSetting.apiKey.value.substring(0, 2) + "*".repeat(providerSetting.apiKey.value.length - 2);
           }
         }
       }

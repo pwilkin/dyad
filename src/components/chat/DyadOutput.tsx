@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import type React from "react";
+import { useState } from "react";
 import {
   ChevronsDownUp,
   ChevronsUpDown,
@@ -33,12 +34,11 @@ export const DyadOutput: React.FC<DyadOutputProps> = ({
   return (
     <div
       className={`relative bg-(--background-lightest) hover:bg-(--background-lighter) rounded-lg px-4 py-2 border my-2 cursor-pointer ${borderColor}`}
-      onClick={() => setIsContentVisible(!isContentVisible)}
+      onClick={() => setIsContentVisible(!isContentVisible)} onKeyDown={() => setIsContentVisible(!isContentVisible)}
     >
       {/* Top-left label badge */}
       <div
-        className={`absolute top-2 left-2 flex items-center gap-1 px-2 py-0.5 rounded text-xs font-semibold ${iconColor} bg-white dark:bg-gray-900`}
-        style={{ zIndex: 1 }}
+        className={`absolute top-2 left-2 flex items-center gap-1 px-2 py-0.5 rounded text-xs font-semibold ${iconColor} bg-white dark:bg-gray-900 z-1`}
       >
         {icon}
         <span>{label}</span>

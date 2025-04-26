@@ -157,14 +157,11 @@ export function registerChatStreamHandlers() {
         if (readSettings().experiments?.enableSupabaseIntegration) {
           if (updatedChat.app?.supabaseProjectId) {
             systemPrompt +=
-              "\n\n" +
-              SUPABASE_AVAILABLE_SYSTEM_PROMPT +
-              "\n\n" +
-              (await getSupabaseContext({
+              `\n\n${SUPABASE_AVAILABLE_SYSTEM_PROMPT}\n\n${await getSupabaseContext({
                 supabaseProjectId: updatedChat.app.supabaseProjectId,
-              }));
+              })}`;
           } else {
-            systemPrompt += "\n\n" + SUPABASE_NOT_AVAILABLE_SYSTEM_PROMPT;
+            systemPrompt += `\n\n${SUPABASE_NOT_AVAILABLE_SYSTEM_PROMPT}`;
           }
         }
         const { textStream } = streamText({
@@ -175,7 +172,7 @@ export function registerChatStreamHandlers() {
           messages: [
             {
               role: "user",
-              content: "This is my codebase. " + codebaseInfo,
+              content: `This is my codebase. ${codebaseInfo}`,
             },
             {
               role: "assistant",

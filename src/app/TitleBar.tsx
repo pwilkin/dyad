@@ -27,7 +27,7 @@ export const TitleBar = () => {
 
   return (
     <div className="@container z-11 w-full h-11 bg-(--sidebar) absolute top-0 left-0 app-region-drag flex items-center">
-      <div className="pl-20"></div>
+      <div className="pl-20" />
       <img src={logo} alt="Dyad Logo" className="w-6 h-6 mr-2" />
       <Button
         variant="outline"

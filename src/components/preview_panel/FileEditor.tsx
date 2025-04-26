@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import Editor, { OnMount } from "@monaco-editor/react";
+import Editor, { type OnMount } from "@monaco-editor/react";
 import { useLoadAppFile } from "@/hooks/useLoadAppFile";
 import { useTheme } from "@/contexts/ThemeContext";
 import { ChevronRight, Circle } from "lucide-react";
@@ -73,12 +73,12 @@ export const FileEditor = ({ appId, filePath }: FileEditorProps) => {
       needsSaveRef.current = false;
       setDisplayUnsavedChanges(false);
     }
-  }, [content, filePath]);
+  }, [content]);
 
   // Sync the UI with the needsSave ref
   useEffect(() => {
     setDisplayUnsavedChanges(needsSaveRef.current);
-  }, [needsSaveRef.current]);
+  }, []);
 
   // Determine if dark mode based on theme
   const isDarkMode =

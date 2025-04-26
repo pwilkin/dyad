@@ -1,8 +1,6 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { SupabaseSchema } from "@/lib/schemas";
 import { IpcClient } from "@/ipc/ipc_client";
 import { toast } from "sonner";
 import { useSettings } from "@/hooks/useSettings";
@@ -50,7 +48,7 @@ export function SupabaseConnector({ appId }: { appId: number }) {
       }
     };
     handleDeepLink();
-  }, [lastDeepLink]);
+  }, [lastDeepLink, refreshSettings, refreshApp]);
   const {
     projects,
     loading,
@@ -111,7 +109,7 @@ export function SupabaseConnector({ appId }: { appId: number }) {
                   <img
                     src={isDarkMode ? supabaseLogoDark : supabaseLogoLight}
                     alt="Supabase Logo"
-                    style={{ height: 20, width: "auto", marginRight: 4 }}
+                    className="h-[20] w-auto mr-[4]"
                   />
                   <ExternalLink className="h-4 w-4" />
                 </div>
@@ -203,6 +201,11 @@ export function SupabaseConnector({ appId }: { appId: number }) {
         <h2 className="text-lg font-medium">Integrations</h2>
         <img
           onClick={() => {
+            IpcClient.getInstance().openExternalUrl(
+              "https://supabase-oauth.dyad.sh/api/connect-supabase/login"
+            );
+          }}
+          onKeyDown={() => {
             IpcClient.getInstance().openExternalUrl(
               "https://supabase-oauth.dyad.sh/api/connect-supabase/login"
             );

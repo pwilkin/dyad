@@ -31,7 +31,7 @@ export function VersionPane({ isVisible, onClose }: VersionPaneProps) {
         versionId: "main",
       });
     }
-  }, [isVisible, refreshVersions]);
+  }, [isVisible, refreshVersions, setSelectedVersionId, selectedVersionId, appId]);
   if (!isVisible) {
     return null;
   }
@@ -64,6 +64,13 @@ export function VersionPane({ isVisible, onClose }: VersionPaneProps) {
                     : ""
                 }`}
                 onClick={() => {
+                  IpcClient.getInstance().checkoutVersion({
+                    appId: appId!,
+                    versionId: version.oid,
+                  });
+                  setSelectedVersionId(version.oid);
+                }}
+                onKeyDown={() => {
                   IpcClient.getInstance().checkoutVersion({
                     appId: appId!,
                     versionId: version.oid,

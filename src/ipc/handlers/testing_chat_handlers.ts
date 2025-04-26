@@ -48,7 +48,7 @@ export async function streamTestResponse(
   abortController: AbortController,
   updatedChat: any
 ): Promise<string> {
-  console.log(`Using canned response for test prompt`);
+  console.log("Using canned response for test prompt");
 
   // Simulate streaming by splitting the response into chunks
   const chunks = testResponse.split(" ");
@@ -61,7 +61,7 @@ export async function streamTestResponse(
     }
 
     // Add the word plus a space
-    fullResponse += chunk + " ";
+    fullResponse += `${chunk} `;
 
     // Send the current accumulated response
     event.sender.send("chat:response:chunk", {

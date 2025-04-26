@@ -68,7 +68,7 @@ export function AppSidebar() {
       expandedByHover.current = false;
       setHoverState("no-hover");
     }
-  }, [hoverState, toggleSidebar, state, setHoverState]);
+  }, [hoverState, toggleSidebar, state]);
 
   const routerState = useRouterState();
   const isAppRoute =
