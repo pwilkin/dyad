@@ -3,7 +3,7 @@ import { createGoogleGenerativeAI as createGoogle } from "@ai-sdk/google";
 import { createAnthropic } from "@ai-sdk/anthropic";
 import { createOpenRouter } from "@openrouter/ai-sdk-provider";
 import { createOllama } from "ollama-ai-provider";
-
+import { LMStudioClient } from "@lmstudio/sdk";
 import type { LargeLanguageModel, UserSettings } from "../../lib/schemas";
 import { PROVIDER_TO_ENV_VAR, AUTO_MODELS } from "../../constants/models";
 import { getEnvVar } from "./read_env";
@@ -61,8 +61,14 @@ export function getModelClient(
     case "ollama": {
       const provider = createOllama();
       return provider(model.name);
-    }
-    default: {
+   }
+   case "lmstudio": {
+     // Using LM Studio's OpenAI compatible API
+     const baseURL = "http://localhost:1234/v1"; // Default LM Studio OpenAI API URL
+     const provider = createOpenAI({ apiKey: "dummy", baseURL });
+     return provider(model.name);
+   }
+   default: {
       // Ensure exhaustive check if more providers are added
       const _exhaustiveCheck: never = model.provider;
       throw new Error(`Unsupported model provider: ${model.provider}`);
