@@ -6,7 +6,7 @@ export interface ModelOption {
   tag?: string;
 }
 
-type RegularModelProvider = Exclude<ModelProvider, "ollama">;
+type RegularModelProvider = Exclude<ModelProvider, "ollama" | "lmstudio">;
 export const MODEL_OPTIONS: Record<RegularModelProvider, ModelOption[]> = {
   openai: [
     {
