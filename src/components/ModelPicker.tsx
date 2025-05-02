@@ -96,10 +96,7 @@ export function ModelPicker({
   const hasLMStudioModels = !lmStudioLoading && !lmStudioError && lmStudioModels.length > 0;
 
   return (
-    <DropdownMenu open={open} onOpenChange={(newOpen) => {
-      console.log("DropdownMenu onOpenChange:", newOpen);
-      setOpen(newOpen);
-    }}>
+    <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
         <Button
           variant="outline"

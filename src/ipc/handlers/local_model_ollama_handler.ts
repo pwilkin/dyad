@@ -23,14 +23,11 @@ interface OllamaModel {
 export async function fetchOllamaModels(): Promise<LocalModelListResponse> {
   try {
     const response = await fetch(`${OLLAMA_API_URL}/api/tags`);
-    console.log("fetchOllamaModels response:", response);
     if (!response.ok) {
-      console.error("fetchOllamaModels response not ok:", response.status, response.statusText);
       throw new Error(`Failed to fetch model: ${response.statusText}`);
     }
 
     const data = await response.json();
-    console.log("fetchOllamaModels data:", data);
     const ollamaModels: OllamaModel[] = data.models || [];
 
     const models: LocalModel[] = ollamaModels.map((model: OllamaModel) => {
@@ -48,7 +45,6 @@ export async function fetchOllamaModels(): Promise<LocalModelListResponse> {
         provider: "ollama",
       };
     });
-  console.log("fetchOllamaModels mapped models:", models);
   logger.info(`Successfully fetched ${models.length} models from Ollama`);
   return { models, error: null };
   } catch (error) {
