@@ -3,7 +3,7 @@ import { createGoogleGenerativeAI as createGoogle } from "@ai-sdk/google";
 import { createAnthropic } from "@ai-sdk/anthropic";
 import { createOpenRouter } from "@openrouter/ai-sdk-provider";
 import { createOllama } from "ollama-ai-provider";
-import { LMStudioClient } from "@lmstudio/sdk";
+import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
 import type { LargeLanguageModel, UserSettings } from "../../lib/schemas";
 import {
   PROVIDER_TO_ENV_VAR,
@@ -86,7 +86,7 @@ export function getModelClient(
    case "lmstudio": {
      // Using LM Studio's OpenAI compatible API
      const baseURL = "http://localhost:1234/v1"; // Default LM Studio OpenAI API URL
-     const provider = createOpenAI({ apiKey: "dummy", baseURL });
+     const provider = createOpenAICompatible({ name: "lmstudio", baseURL });
      return provider(model.name);
    }
    default: {

@@ -1,33 +1,35 @@
 import { ipcMain } from "electron";
 import log from "electron-log";
-import { LocalModelListResponse, LocalModel } from "../ipc_types";
-import { LMStudioClient } from "@lmstudio/sdk";
+import type { LocalModelListResponse, LocalModel } from "../ipc_types";
 
 const logger = log.scope("lmstudio_handler");
 
 export interface LMStudioModel {
   type: "llm" | "embedding" | string;
-  modelKey: string;
-  path: string;
-  displayName: string;
-  provider: "lmstudio";
-  format?: string;
-  sizeBytes?: number;
-  paramsString?: string;
-  architecture?: string;
-  maxContextLength?: number;
+  id: string;
+  object: string;
+  publisher: string;
+  state: "loaded" | "not-loaded";
+  max_context_length: number;
+  quantization: string
+  compatibility_type: string
+  arch: string;
   [key: string]: any;
 }
 
 export async function fetchLMStudioModels(): Promise<LocalModelListResponse> {
   try {
-    const client = new LMStudioClient();
-    const downloadedModels = await client.system.listDownloadedModels();
+    const modelsResponse: Response = await fetch("http://localhost:1234/api/v0/models");
+    if (!modelsResponse.ok) {
+      throw new Error("Failed to fetch models from LM Studio");
+    }
+    const modelsJson = await modelsResponse.json();
+    const downloadedModels = modelsJson.data as LMStudioModel[];
     const models: LocalModel[] = downloadedModels
       .filter((model: any) => model.type === "llm")
       .map((model: any) => ({
-        modelName: model.modelKey || model.path,
-        displayName: model.displayName || model.path.split(/[/\\]/).pop(),
+        modelName: model.id,
+        displayName: model.id,
         provider: "lmstudio"
       }));
 
